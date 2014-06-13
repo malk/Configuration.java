@@ -25,10 +25,16 @@ public class ConfigurationTest {
 	public void testImmutable() {
 		System.setProperty("test.property", "value");
 		assertThat(
-				Configuration.get("test.property"))
-				.isEqualTo("value");
+			System.getProperty("test.property"))
+			.isEqualTo("value");
+		assertThat(
+			Configuration.get("test.property"))
+			.isEqualTo("value");
 
 		System.setProperty("test.property", "other");
+		assertThat(
+				System.getProperty("test.property"))
+				.isEqualTo("other");
 		assertThat(
 				Configuration.get("test.property"))
 				.isEqualTo("value");
