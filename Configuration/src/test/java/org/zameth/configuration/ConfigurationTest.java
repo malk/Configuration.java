@@ -9,16 +9,16 @@ public class ConfigurationTest {
 	@Test
 	public void testEmpty() {
 		assertThat(
-				Configuration.get("PropertyThatDoesNotExistsAtAll"))
-				.isEmpty();
+			Configuration.get("PropertyThatDoesNotExistsAtAll"))
+			.isEmpty();
 	}
 	
 	@Test
 	public void testSys() {
 		System.setProperty("test.property", "value");
 		assertThat(
-				Configuration.get("test.property"))
-				.isEqualTo("value");
+			Configuration.get("test.property"))
+			.isEqualTo("value");
 	}
 	
 	@Test
@@ -33,10 +33,17 @@ public class ConfigurationTest {
 
 		System.setProperty("test.property", "other");
 		assertThat(
-				System.getProperty("test.property"))
-				.isEqualTo("other");
+			System.getProperty("test.property"))
+			.isEqualTo("other");
 		assertThat(
-				Configuration.get("test.property"))
-				.isEqualTo("value");
+			Configuration.get("test.property"))
+			.isEqualTo("value");
+	}
+	
+	@Test
+	public void testFromResourceFile() {
+		assertThat(
+			Configuration.get("property.in.a.ressource.file"))
+			.isEqualTo("12344");
 	}
 }

@@ -1,6 +1,5 @@
 package org.zameth.configuration;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,18 +38,9 @@ public final class Configuration {
 	private static Iterable<Properties> loadProperties() {
 		final List<Properties> properties = new ArrayList<Properties>();
 		final Properties system = System.getProperties();
+		final Properties defaultProperties = slurpPropertiesFile(defaultPropertiesResourcePath());
 		String configFilePath;
 
-		try {
-			configFilePath = Configuration
-				.class
-				.getResource(DEFAULT_PROPERTIES_RESOURCE)
-				.getFile();
-		} catch (final Exception e) {
-			configFilePath = null;
-		}
-
-		final Properties defaultProperties = slurpPropertiesFile(configFilePath);
 		
 		configFilePath = system.getProperty(CONFIG_PATH_PROPERTY);
 		if (configFilePath == null) {
@@ -63,15 +53,25 @@ public final class Configuration {
 		return properties;
 	}
 
+
+	private static String defaultPropertiesResourcePath() {
+		try {
+			return Configuration
+					.class
+					.getResource(DEFAULT_PROPERTIES_RESOURCE)
+					.getFile();
+		} catch (final Exception e) {
+			return null;
+		}
+	}
+
 	private static Properties slurpPropertiesFile(final String path) {
 		final Properties properties = new Properties();
 		try {
-			final File configFile = new File(path);
-			if (configFile.isFile()) {
-				properties.load(new FileInputStream(configFile));
-			}
+			properties.load(new FileInputStream(path));
 		} catch (final Exception e) {
 			// the configuration file existing at all is purely optional, no errors on fail
+			return new Properties();
 		}
 		return properties;
 	}
